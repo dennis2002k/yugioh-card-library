@@ -19,3 +19,6 @@ venv/
 
 # Docker
 *.log
+
+# Images folder
+images/

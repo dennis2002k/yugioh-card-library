@@ -1,0 +1,7 @@
+sqlmodel
+pymysql
+cryptography
+requests
+dotenv
+pydantic
+fastapi[standard]
