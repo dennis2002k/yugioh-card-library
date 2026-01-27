@@ -2,32 +2,23 @@ from fastapi import FastAPI, Depends, Query
 from typing import Annotated
 from sqlalchemy import create_engine, text,  select
 from sqlmodel import SQLModel, Field, create_engine, Session, col
-from dotenv import load_dotenv
-from ..app.models import CardRead, Card, CardFilter
-import os
+from .models import CardRead, Card, CardFilter, User, UserinDB
 from fastapi.encoders import jsonable_encoder
+from .database import SessionDep, create_db_and_tables
+from . import users
+from . import auth
 
 
 
-
-# load database url from env variable
-load_dotenv()
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-if not DATABASE_URL:
-    raise ValueError("DATABASE_URL not set in .env")
-
-# connect_args = {"check_same_thread": False}
-engine = create_engine(DATABASE_URL)
-
-def get_session():
-    with Session(engine) as session:
-        yield session
-
-SessionDep = Annotated[Session, Depends(get_session)]
 
 app = FastAPI()
+app.include_router(users.router)
+app.include_router(auth.router)
 
+
+@app.on_event("startup")
+def on_startup():
+    create_db_and_tables()
 
 @app.get("/card/search", response_model=list[CardRead])
 async def search_card( session: SessionDep, filters: CardFilter = Depends()):

@@ -1,5 +1,5 @@
 from sqlmodel import SQLModel, Field, create_engine, Session, Relationship
-from typing import List, Dict
+from typing import List, Dict, Optional, List
 from sqlalchemy import JSON, Column, Text 
 from pydantic import BaseModel
 
@@ -48,7 +48,6 @@ class CardSet(SQLModel, table=True):
         link_model=CardSetLink
     )
 
-from typing import Optional, List
 
 class CardRead(SQLModel):
     id: int = Field(default=None, primary_key=True)
@@ -97,3 +96,15 @@ class CardFilter(BaseModel):
     archetype: str | None = Field(default=None, index=True)
     link_rating: int | None = Field(default=None, index=True)
     link_arrows: str | None = Field(default=None, index=True)
+
+
+class User(SQLModel):
+    username: str = Field(index=True, unique=True)
+    email: str = Field(index=True, unique=True)
+    is_active: bool = True
+
+class UserinDB(User, table=True):
+    id: int = Field(primary_key=True)
+    hashed_password: str
+
+
