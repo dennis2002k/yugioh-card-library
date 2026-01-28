@@ -73,7 +73,6 @@ class CardRead(SQLModel):
     model_config = {"from_attributes": True}
 
 
-
 class CardFilter(BaseModel):
     id: int | None = Field(default=None, primary_key=True)
     name: str | None = Field(default=None, index=True)
@@ -107,4 +106,8 @@ class UserinDB(User, table=True):
     id: int = Field(primary_key=True)
     hashed_password: str
 
+class CardUserLink(SQLModel, table=True):
+    card_id: int | None = Field(foreign_key="card.id", primary_key=True, index=True)
+    user_id: int | None = Field(foreign_key="userindb.id", primary_key=True, index=True)
+    quantity: int | None
 
