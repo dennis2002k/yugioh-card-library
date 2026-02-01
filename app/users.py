@@ -54,15 +54,27 @@ async def get_current_active_user(curr_user: Annotated[User, Depends(get_current
 async def read_items(token: Annotated[str, Depends(oauth2_scheme)]):
     return {"token": token}
 
-@router.get("/me/library", response_model=list[Card])
+@router.get("/me/library", response_model=list[CardRead])
 async def get_all_cards(session: SessionDep, curr_user: Annotated[User, Depends(get_current_active_user)]):
     cards = session.exec(
-        select(Card)
+        select(Card, CardUserLink.quantity)
         .join(CardUserLink)
         .where(CardUserLink.user_id == curr_user.id)
     ).all()
 
-    return cards
+    output = []
+    for card_obj, qty in cards:
+        # 2. Convert the Card ORM object to a dict
+        card_data = card_obj.model_dump()
+        
+        # 3. Inject the quantity from the join into the data
+        card_data["quantity"] = qty
+        
+        # 4. Create a CardRead instance (this triggers your validators!)
+        output.append(CardRead(**card_data))
+
+
+    return output
 
 @router.post("/me/library/add")
 async def add_card_to_library(
@@ -121,7 +133,22 @@ async def search_card_library(
     curr_user: Annotated[User, Depends(get_current_active_user)],
     filters: CardFilter = Depends()):
 
-    statement = search_card(filters)
+    #TODO swamp order to be faster
+    statement = search_card(filters, in_library=True)
     statement = statement.join(CardUserLink).where(CardUserLink.user_id == curr_user.id)
 
-    return session.exec(statement).all()
+    cards = session.exec(statement).all()
+
+    output = []
+    for card_obj, qty in cards:
+        # 2. Convert the Card ORM object to a dict
+        card_data = card_obj.model_dump()
+        
+        # 3. Inject the quantity from the join into the data
+        card_data["quantity"] = qty
+        
+        # 4. Create a CardRead instance (this triggers your validators!)
+        output.append(CardRead(**card_data))
+
+
+    return output
