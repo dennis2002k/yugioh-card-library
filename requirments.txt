@@ -7,3 +7,4 @@ pydantic
 fastapi[standard]
 pwdlib[argon2]
 pyjwt
+pytest

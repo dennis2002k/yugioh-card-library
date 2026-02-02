@@ -2,18 +2,31 @@
 import { useState, useEffect } from "react";
 import "../index.css";
 
-const ATTRIBUTE_OPTIONS = ["dark","light","earth","water","fire","wind","divine"];
-const MONSTER_TYPES = ["spellcaster","dragon","zombie","warrior","beast-warrior","beast","winged-beast","fiend","fairy","insect","dinosaur","reptile","fish","sea serpent","aqua","pyro","thunder","rock","plant","machine","psychic","divine-beast","wyrm","cyberse","illusion"];
-const CARD_TYPES = ["normal","effect","ritual","fusion","synchro","xyz","toon","spirit","union","gemini","tuner","flip","pendulum","link"];
-
+const ATTRIBUTE_OPTIONS = ["Dark","Light","Earth","Water","Fire","Wind","Divine"];
+const MONSTER_TYPES = [
+  "Spellcaster","Dragon","Zombie","Warrior","Beast-Warrior","Beast",
+  "Winged Beast","Fiend","Fairy","Insect","Dinosaur","Reptile","Fish",
+  "Sea Serpent","Aqua","Pyro","Thunder","Rock","Plant","Machine",
+  "Psychic","Divine-Beast","Wyrm","Cyberse","Illusion"
+];
+const FRAME_TYPES = ["normal","effect","ritual","fusion","synchro","xyz","toon","spirit","union","gemini","tuner","flip","pendulum","Link"];
+const CARD_TYPES = ["Monster", "Spell Card", "Trap Card"];
+const ICON = ["Equip", "Field", "Quick-Play", "Ritual", "Continuous", "Counter", "Normal"];
 export default function GlobalFilters({ onChange }) {
   const [filters, setFilters] = useState({});
 
   function updateFilter(key, value) {
-    setFilters(prev => ({
-      ...prev,
-      [key]: value || undefined,
-    }));
+    setFilters(prev => {
+      const next = { ...prev };
+  
+      if (value === "" || value === undefined || value === null) {
+        delete next[key];     
+      } else {
+        next[key] = value;
+      }
+  
+      return next;
+    });
   }
 
   // call onChange with debounce
@@ -25,6 +38,8 @@ export default function GlobalFilters({ onChange }) {
     return () => clearTimeout(delay);
   }, [filters]);
 
+  
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
       <input
@@ -32,9 +47,19 @@ export default function GlobalFilters({ onChange }) {
         onChange={e => updateFilter("name", e.target.value)}
       />
 
+      <select onChange={e => updateFilter("type", e.target.value)}>
+        <option value="">All Card Types</option>
+        {CARD_TYPES.map(a => <option key={a} value={a}>{a}</option>)}
+      </select>
+
       <select onChange={e => updateFilter("attribute", e.target.value)}>
         <option value="">All Attributes</option>
         {ATTRIBUTE_OPTIONS.map(a => <option key={a} value={a}>{a}</option>)}
+      </select>
+
+      <select onChange={e => updateFilter("race", e.target.value)}>
+        <option value="">Spell&Trap Types</option>
+        {ICON.map(a => <option key={a} value={a}>{a}</option>)}
       </select>
 
       <select onChange={e => updateFilter("race", e.target.value)}>
@@ -42,9 +67,9 @@ export default function GlobalFilters({ onChange }) {
         {MONSTER_TYPES.map(a => <option key={a} value={a}>{a}</option>)}
       </select>
 
-      <select onChange={e => updateFilter("type", e.target.value)}>
-        <option value="">All Card Types</option>
-        {CARD_TYPES.map(a => <option key={a} value={a}>{a}</option>)}
+      <select onChange={e => updateFilter("frameType", e.target.value)}>
+        <option value="">All Card Frame Types</option>
+        {FRAME_TYPES.map(a => <option key={a} value={a}>{a}</option>)}
       </select>
 
       <div style={{ display: "flex", gap: "4px" }}>

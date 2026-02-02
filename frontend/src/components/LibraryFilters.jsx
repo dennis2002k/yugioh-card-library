@@ -12,11 +12,15 @@ const monsterTypes = [
   "Psychic","Divine-Beast","Wyrm","Cyberse","Illusion"
 ];
 
-const cardTypes = [
+const cardFrames = [
   "Normal","Effect","Ritual","Fusion","Synchro","XYZ",
   "Toon","Spirit","Union","Gemini","Tuner",
   "Flip","Pendulum","Link"
 ];
+
+const cardTypes = ["Monster", "Spell Card", "Trap Card"]
+
+const icons = ["Equip", "Field", "Quick-Play", "Ritual", "Continuous", "Counter", "Normal"];
 
 function LibraryFilters({ onSearch }) {
   const [filters, setFilters] = useState({});
@@ -57,10 +61,24 @@ function LibraryFilters({ onSearch }) {
         onChange={e => updateFilter("name", e.target.value)}
       />
 
+      <select onChange={e => updateFilter("type", e.target.value)}>
+        <option value="">Card Type</option>
+        {cardTypes.map(t => (
+          <option key={t}>{t}</option>
+        ))}
+      </select>
+
       <select onChange={e => updateFilter("attribute", e.target.value)}>
         <option value="">Attribute</option>
         {attributes.map(a => (
           <option key={a}>{a}</option>
+        ))}
+      </select>
+
+      <select onChange={e => updateFilter("race", e.target.value)}>
+        <option value="">Spell&Trap Type</option>
+        {icons.map(t => (
+          <option key={t}>{t}</option>
         ))}
       </select>
 
@@ -71,9 +89,9 @@ function LibraryFilters({ onSearch }) {
         ))}
       </select>
 
-      <select onChange={e => updateFilter("type", e.target.value)}>
-        <option value="">Card Type</option>
-        {cardTypes.map(t => (
+      <select onChange={e => updateFilter("frameType", e.target.value)}>
+        <option value="">Card Frame</option>
+        {cardFrames.map(t => (
           <option key={t}>{t}</option>
         ))}
       </select>

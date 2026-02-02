@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import LibraryFilters from "../components/SearchBar";
+import LibraryFilters from "../components/LibraryFilters";
 import GlobalCardSearch from "../components/GlobalCardSearch";
 import "../index.css"
 

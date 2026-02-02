@@ -9,6 +9,7 @@ class CardSetLink(SQLModel, table=True):
     card_id: int | None = Field(foreign_key="card.id", primary_key=True, index=True)
     set_id: int | None = Field(foreign_key="cardset.id", primary_key=True, index=True)
 
+    # __table_args__ = {"extend_existing": True}
     # card: "Card" = Relationship(back_populates="sets")
     # cardset: "CardSet" = Relationship(back_populates="cards")
 
@@ -36,6 +37,8 @@ class CardRead(CardBase):
     card_images:  dict | None = Field(default=[])
     card_prices:  list[dict] | None = Field(default=[])
     quantity: int | None = 1
+    set_code: str | None = None
+    set_rarity_code: str | None = None
 
     @field_validator("card_sets", "card_images", "card_prices", mode="before")
     @classmethod
@@ -53,10 +56,14 @@ class Card(CardBase, table=True):
     card_images:  str = Field(default="[]", sa_column=Column(Text))
     card_prices:  str = Field(default="[]")
 
+
+    __tablename__ = "card"
+
     sets: List["CardSet"] = Relationship(
         back_populates="cards",
         link_model=CardSetLink
     )
+    # __table_args__ = {"extend_existing": True}
 
 
 
@@ -68,7 +75,7 @@ class CardSet(SQLModel, table=True):
         back_populates="sets",
         link_model=CardSetLink
     )
-
+    # __table_args__ = {"extend_existing": True}
 
 class CardFilter(BaseModel):
     id: int | None = Field(default=None, primary_key=True)
@@ -97,14 +104,22 @@ class CardFilter(BaseModel):
 class User(SQLModel):
     username: str = Field(index=True, unique=True)
     email: str = Field(index=True, unique=True)
-    is_active: bool = True
+    is_active: bool = Field(default=True)
 
 class UserinDB(User, table=True):
     id: int = Field(primary_key=True)
     hashed_password: str
 
+    __tablename__ = "userindb"
+    # __table_args__ = {"extend_existing": True}
+
 class CardUserLink(SQLModel, table=True):
     card_id: int | None = Field(foreign_key="card.id", primary_key=True, index=True)
     user_id: int | None = Field(foreign_key="userindb.id", primary_key=True, index=True)
     quantity: int | None
+    set_code: str | None
+    set_rarity_code: str | None
+
+    # __table_args__ = {"extend_existing": True}
+    __tablename__ = "carduserlink"
 

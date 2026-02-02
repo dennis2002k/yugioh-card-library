@@ -4,7 +4,7 @@ from sqlmodel import SQLModel, Field, create_engine, Session
 from dotenv import load_dotenv
 import os
 from pydantic import create_model
-from app.models import *
+from app.models import Card
 import json
 
 url = "https://db.ygoprodeck.com/api/v7/cardinfo.php"
@@ -46,10 +46,10 @@ engine = create_engine(DATABASE_URL)
 # SQLModel.metadata.drop_all(engine)
 # SQLModel.metadata.create_all(engine)
 
-# resp = requests.get("https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Dark Magician")
-# resp.raise_for_status()
-# card = resp.json()["data"]
-# print(card[0]["card_images"])
+resp = requests.get("https://db.ygoprodeck.com/api/v7/cardinfo.php?name=Dark Magician")
+resp.raise_for_status()
+card = resp.json()["data"]
+print(card[0]["frameType"])
 
 
 # get cards from ygoprodeck api
@@ -73,7 +73,7 @@ for card in cards:
         id=card["id"],
         name=card["name"],
         type=card["type"],
-        frametype=card["frameType"],
+        frameType=card["frameType"],
         desc=card["desc"],
         pend_desc=card.get("pend_desc"),
         atk=card.get("atk"),
@@ -89,12 +89,13 @@ for card in cards:
         card_sets=json.dumps(card.get("card_sets")),
         card_prices=json.dumps(card.get("card_prices"))
     )
+   
     # dynamicaly create model for database table
     print("Save Card to dataset..\n")
     with Session(engine) as session:
         session.add(card_to_save)
         session.commit()
-    # print(card)
+    print(card)
     
 
 

@@ -12,14 +12,14 @@ import os
 
 router = APIRouter()
 
-def search_card(filters: CardFilter = Depends(), in_library: bool = False):
+def search_card(filters: CardFilter = Depends(), in_library: bool = Field(default=False)):
 
     operators = {
         "min": "__ge__",
         "max": "__le__"
     }
     if in_library:
-        statement = select(Card, CardUserLink.quantity)
+        statement = select(Card, CardUserLink.quantity, CardUserLink.set_code, CardUserLink.set_rarity_code)
     else:
         statement = select(Card)
     filter_data = filters.model_dump(exclude_none=True)
@@ -44,10 +44,8 @@ def search_card(filters: CardFilter = Depends(), in_library: bool = False):
     return statement
 
 
-
 @router.get("/card/search", response_model=list[CardRead])
 async def seacrh_card_db(session: SessionDep, filters: CardFilter = Depends()):
-    print(filters)
     statement = search_card(filters)
 
     cards = session.exec(statement).all()

@@ -50,25 +50,23 @@ async def get_current_active_user(curr_user: Annotated[User, Depends(get_current
         raise HTTPException(status_code=400, detail="Inactive user")
 
 
-@router.get("/items/")
-async def read_items(token: Annotated[str, Depends(oauth2_scheme)]):
-    return {"token": token}
-
 @router.get("/me/library", response_model=list[CardRead])
 async def get_all_cards(session: SessionDep, curr_user: Annotated[User, Depends(get_current_active_user)]):
     cards = session.exec(
-        select(Card, CardUserLink.quantity)
+        select(Card, CardUserLink.quantity, CardUserLink.set_code, CardUserLink.set_rarity_code)
         .join(CardUserLink)
         .where(CardUserLink.user_id == curr_user.id)
     ).all()
 
     output = []
-    for card_obj, qty in cards:
+    for card_obj, qty, set, rarity in cards:
         # 2. Convert the Card ORM object to a dict
         card_data = card_obj.model_dump()
         
         # 3. Inject the quantity from the join into the data
         card_data["quantity"] = qty
+        card_data["set_code"] = set
+        card_data["set_rarity_code"] = rarity
         
         # 4. Create a CardRead instance (this triggers your validators!)
         output.append(CardRead(**card_data))
@@ -81,6 +79,15 @@ async def add_card_to_library(
     session: SessionDep, 
     card: Annotated[Card, Body()], 
     curr_user: Annotated[User, Depends(get_current_active_user)]):
+
+
+    #check if given card is valid in all cards database
+    db_card = session.get(Card, card.id)
+    if not db_card:
+        raise HTTPException(
+            status_code=404,
+            detail="Card does not exist"
+        )
 
     statement = select(CardUserLink).where(CardUserLink.user_id == curr_user.id)
     statement = statement.where(CardUserLink.card_id == card.id)
@@ -98,9 +105,10 @@ async def add_card_to_library(
         session.commit()
         session.refresh(new_card)
         print("Added card in library: ", card)
+    return {"success": True, "message": "Card added"}
 
 @router.delete("/me/library/delete/{card_id}")
-async def add_card_to_library(
+async def delete_card_from_library(
     session: SessionDep, 
     card_id: Annotated[int, Path()],
     curr_user: Annotated[User, Depends(get_current_active_user)],
@@ -123,8 +131,9 @@ async def add_card_to_library(
     else:
         raise HTTPException(
             status_code=404,
-            detail="Card not found in your library"
+            detail="Card not found in user's library"
         )
+    return {"success": True, "message": "Card removed"}
     
 
 @router.get("/me/library/search", response_model=list[CardRead])
@@ -140,12 +149,14 @@ async def search_card_library(
     cards = session.exec(statement).all()
 
     output = []
-    for card_obj, qty in cards:
+    for card_obj, qty, set, rarity in cards:
         # 2. Convert the Card ORM object to a dict
         card_data = card_obj.model_dump()
         
         # 3. Inject the quantity from the join into the data
         card_data["quantity"] = qty
+        card_data["set_code"] = set
+        card_data["set_rarity_code"] = rarity
         
         # 4. Create a CardRead instance (this triggers your validators!)
         output.append(CardRead(**card_data))
