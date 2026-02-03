@@ -6,7 +6,7 @@ from app import auth
 from app import utilities
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-
+import os
 
 
 
@@ -15,7 +15,13 @@ app.include_router(users.router)
 app.include_router(auth.router)
 app.include_router(utilities.router)
 
-app.mount("/images", StaticFiles(directory="images"), name="images")
+IMAGE_PATH = "images"
+
+if os.path.exists(IMAGE_PATH):
+    app.mount("/images", StaticFiles(directory=IMAGE_PATH), name="images")
+else:
+    print(f"Warning: {IMAGE_PATH} directory not found. Static files not mounted.")
+
 
 
 origins = [
