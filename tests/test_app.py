@@ -8,6 +8,40 @@ RANDOM_ID_TO_REMOVE = 32061192
 NOT_EXIST_ID = 8402543
 
 
+def test_user_full_journey(client: TestClient):
+    # 1. REGISTER a new user
+    user_data = {"username": "bridge_boy", "password": "supersecretpassword"}
+    reg_response = client.post("/register", json=user_data)
+    assert reg_response.status_code == 200, f"Registration failed: {reg_response.text}"
+
+    # 2. LOGIN to get the Access Token
+    login_response = client.post(
+        "/token", 
+        data={"username": "bridge_boy", "password": "supersecretpassword"}
+    )
+    assert login_response.status_code == 200
+    token = login_response.json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    # 3. ADD A CARD to the library
+    # (Ensure this ID exists in your seeded/test DB)
+    card_id = RANDOM_ID_TO_ADD 
+    add_response = client.post(
+        "/me/library/add", 
+        headers=headers, 
+        json={"id": card_id}
+    )
+    assert add_response.status_code == 200
+    assert add_response.json()["success"] is True
+
+    # 4. VERIFY the card is actually in the library
+    lib_response = client.get("/me/library", headers=headers)
+    assert lib_response.status_code == 200
+    
+    # Check if the card ID is in the list of card objects returned
+    library_ids = [card["id"] for card in lib_response.json()]
+    assert card_id in library_ids
+    print("\n✅ Golden Path Verified: User can register, login, and manage cards!")
 
 
 def test_get_library(client, auth_headers):
