@@ -23,8 +23,10 @@ if not SECRET_KEY:
 
 password_hash = PasswordHash.recommended()
 
+
 def get_password_hash(password):
     return password_hash.hash(password)
+
 
 @pytest.fixture(scope="function")
 def test_session():
@@ -42,6 +44,7 @@ def test_session():
 
     SQLModel.metadata.drop_all(test_engine)
 
+
 # ---------- Test Client Fixture ----------
 @pytest.fixture(scope="function")
 def client(test_session):
@@ -54,6 +57,7 @@ def client(test_session):
         yield c
     app.dependency_overrides.clear()
 
+
 # ---------- Create test user ----------
 def create_test_user(session):
     hashed_password = get_password_hash("testpassword")
@@ -62,6 +66,10 @@ def create_test_user(session):
     session.commit()
     session.refresh(user)
 
+    return user
+
+
+def create_test_cards(session):
     test_card = Card(
         id=96676583, 
         name="Blue-Eyes White Dragon",
@@ -75,12 +83,19 @@ def create_test_user(session):
     session.add(test_card)
     session.add(test_card2)
     session.commit()
-    return user
+
+
+@pytest.fixture(scope="function")
+def test_cards(test_session):
+    create_test_cards(test_session)
+
 
 # ---------- Auth Fixture ----------
 @pytest.fixture(scope="function")
 def test_user(test_session):
+    create_test_cards(test_session)
     return create_test_user(test_session)
+
 
 @pytest.fixture(scope="function")
 def auth_headers(client, test_user):

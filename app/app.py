@@ -7,10 +7,15 @@ from app import utilities
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import os
+from contextlib import asynccontextmanager
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_db_and_tables() 
+    yield
 
 
-
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 app.include_router(users.router)
 app.include_router(auth.router)
 app.include_router(utilities.router)
@@ -36,9 +41,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-@app.on_event("startup")
-def on_startup():
-    create_db_and_tables()
 
 

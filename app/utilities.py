@@ -19,7 +19,8 @@ def search_card(filters: CardFilter = Depends(), in_library: bool = Field(defaul
         "max": "__le__"
     }
     if in_library:
-        statement = select(Card, CardUserLink.quantity, CardUserLink.set_code, CardUserLink.set_rarity_code)
+        statement = (select(Card, CardUserLink.quantity, CardUserLink.set_code, CardUserLink.set_rarity_code)
+                     .join(CardUserLink, Card.id == CardUserLink.card_id))
     else:
         statement = select(Card)
     filter_data = filters.model_dump(exclude_none=True)

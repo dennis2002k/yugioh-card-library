@@ -34,7 +34,7 @@ class CardBase(SQLModel):
     
 class CardRead(CardBase):
     card_sets:  list[dict] | None = Field(default=[])
-    card_images:  dict | None = Field(default=[])
+    card_images:  list[dict] | None = Field(default=[])
     card_prices:  list[dict] | None = Field(default=[])
     quantity: int | None = 1
     set_code: str | None = None

@@ -8,10 +8,10 @@ RANDOM_ID_TO_REMOVE = 32061192
 NOT_EXIST_ID = 8402543
 
 
-def test_user_full_journey(client: TestClient):
+def test_user_full_journey(client, test_cards):
     # 1. REGISTER a new user
-    user_data = {"username": "bridge_boy", "password": "supersecretpassword"}
-    reg_response = client.post("/register", json=user_data)
+    user_data = {"username": "bridge_boy", "password": "supersecretpassword", "email": "supersecretemail@gmail.com"}
+    reg_response = client.post("/register", data=user_data)
     assert reg_response.status_code == 200, f"Registration failed: {reg_response.text}"
 
     # 2. LOGIN to get the Access Token
