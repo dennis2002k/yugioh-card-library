@@ -22,4 +22,4 @@ venv/
 
 # Images folder
 images/
-.txt
+logfile.txt
