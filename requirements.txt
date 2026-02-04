@@ -1,10 +1,10 @@
-sqlmodel
+sqlmodel>=0.0.16
 pymysql
 cryptography
 requests
 dotenv
-pydantic
-fastapi[standard]
+pydantic>=2.7.0
+fastapi[standard]>=0.110.0
 pwdlib[argon2]
 pyjwt
 pytest

@@ -12,15 +12,15 @@ import os
 
 router = APIRouter()
 
-def search_card(filters: CardFilter = Depends(), in_library: bool = Field(default=False)):
+def search_card(filters: CardFilter = Depends(), in_library: bool = False):
 
     operators = {
         "min": "__ge__",
         "max": "__le__"
     }
     if in_library:
-        statement = (select(Card, CardUserLink.quantity, CardUserLink.set_code, CardUserLink.set_rarity_code)
-                     .join(CardUserLink, Card.id == CardUserLink.card_id))
+        statement = select(Card, CardUserLink.quantity, CardUserLink.set_code, CardUserLink.set_rarity_code)
+                     
     else:
         statement = select(Card)
     filter_data = filters.model_dump(exclude_none=True)

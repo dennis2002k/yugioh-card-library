@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import Depends, APIRouter, HTTPException, status, Body, Path, Query
 from pydantic import BaseModel
 from .auth import oauth2_scheme
-from sqlmodel import Field, SQLModel, Session, select
+from sqlmodel import Field, SQLModel, Session, select, func
 from .models import User, UserinDB, Card, CardUserLink, CardFilter, CardRead
 import jwt
 from jwt.exceptions import InvalidTokenError
@@ -163,3 +163,11 @@ async def search_card_library(
 
 
     return output
+
+
+@router.get("/_debug_openapi")
+async def get_card_count(session: SessionDep):
+    # This creates: SELECT count(card.id) FROM card
+    statement = select(func.count()).select_from(Card)
+    results = session.exec(statement)
+    return results.one()

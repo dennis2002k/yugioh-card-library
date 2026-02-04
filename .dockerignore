@@ -1,0 +1,10 @@
+# .dockerignore
+venv/
+.git/
+.env
+__pycache__/
+images/
+*.sqlite
+
+# Ignore the frontend source and dependencies
+frontend/

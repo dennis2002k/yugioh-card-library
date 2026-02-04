@@ -85,7 +85,7 @@ for card in cards:
         archetype=card.get("archetype"),
         link_rating=card.get("linkval"),
         link_arrows=json.dumps(card.get("linkmarkers")),
-        card_images=json.dumps(card.get("card_images")[0]),  # convert list → JSON string
+        card_images=f"[{json.dumps(card.get("card_images")[0])}]",  # convert list → JSON string
         card_sets=json.dumps(card.get("card_sets")),
         card_prices=json.dumps(card.get("card_prices"))
     )

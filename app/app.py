@@ -31,6 +31,7 @@ else:
 
 origins = [
     "http://localhost:5173",
+    "http://127.0.0.1:3000"
 ]
 
 app.add_middleware(
@@ -40,6 +41,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+from fastapi.openapi.utils import get_openapi
+
+
 
 
 

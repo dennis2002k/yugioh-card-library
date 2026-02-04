@@ -11,7 +11,7 @@ export default function GlobalCardSearch({refreshLibrary, addToLibrary}) {
     try {
       const token = localStorage.getItem("token");
       const params = new URLSearchParams(currentFilters).toString();
-      const response = await fetch(`http://localhost:8000/card/search?${params}`,
+      const response = await fetch(`http://127.0.0.1:8000/card/search?${params}`,
       {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -49,9 +49,9 @@ export default function GlobalCardSearch({refreshLibrary, addToLibrary}) {
         <div style={{ border: "1px solid #ccc", borderRadius: "6px", maxHeight: "400px", overflowY: "auto", background: "white", marginTop: "8px" }}>
           {results.map(card => {
             let images = [];
-            const imageUrl = card.card_images.image_url?.replace("../","/");
+            const imageUrl = card.card_images[0].image_url?.replace("../","/");
             console.log(imageUrl)
-            const fullUrl = imageUrl ? "http://localhost:8000" + imageUrl : null;
+            const fullUrl = imageUrl ? "http://127.0.0.1:9000/ygo-card-images" + imageUrl : null;
 
             return (
               <div key={card.id} className="card"  style={{ display: "flex", alignItems: "center", gap: "10px", padding: "6px", borderBottom: "1px solid #eee" }}

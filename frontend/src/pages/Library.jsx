@@ -13,7 +13,7 @@ function Library() {
   async function addToLibrary(cardId) {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:8000/me/library/add", {
+      const response = await fetch("http://127.0.0.1:8000/me/library/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -39,7 +39,7 @@ function Library() {
       const token = localStorage.getItem("token");
   
       const response = await fetch(
-        `http://localhost:8000/me/library/delete/${cardId}`,
+        `http://127.0.0.1:8000/me/library/delete/${cardId}`,
         {
           method: "DELETE",
           headers: {
@@ -80,7 +80,7 @@ function Library() {
       });
 
       const response = await fetch(
-        `http://localhost:8000/me/library/search?${params.toString()}`,
+        `http://127.0.0.1:8000/me/library/search?${params.toString()}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -159,13 +159,13 @@ function Library() {
           }}
         >
           {cards.map((card) => {
-            let imageUrl = card.card_images?.image_url;
+            let imageUrl = card.card_images[0]?.image_url;
 
             if (imageUrl?.startsWith("../")) {
               imageUrl = imageUrl.replace("../", "/");
             }
 
-            imageUrl = "http://localhost:8000" + imageUrl;
+            imageUrl = "http://127.0.0.1:9000/ygo-card-images" + imageUrl;
 
             return (
               <div

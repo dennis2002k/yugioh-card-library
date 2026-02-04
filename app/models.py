@@ -3,6 +3,7 @@ from typing import List, Dict, Optional, List
 from sqlalchemy import JSON, Column, Text 
 from pydantic import BaseModel,  field_validator
 import json
+from fastapi import  Query
 
 
 class CardSetLink(SQLModel, table=True):
@@ -14,9 +15,9 @@ class CardSetLink(SQLModel, table=True):
     # cardset: "CardSet" = Relationship(back_populates="cards")
 
 class CardBase(SQLModel):
-    id: int = Field(primary_key=True)
-    name: str = Field(index=True)
-    type: str = Field(default=None, index=True) 
+    id: int | None = Field(default=None, primary_key=True)
+    name: str | None = Field(default=None, index=True)
+    type: str | None = Field(default=None, index=True) 
     frameType: str | None = Field(default=None, index=True) 
     desc: str | None = Field(default=None,  sa_column=Column(Text))
     pend_desc: str | None = Field(default=None,  sa_column=Column(Text))
@@ -33,9 +34,9 @@ class CardBase(SQLModel):
 
     
 class CardRead(CardBase):
-    card_sets:  list[dict] | None = Field(default=[])
-    card_images:  list[dict] | None = Field(default=[])
-    card_prices:  list[dict] | None = Field(default=[])
+    card_sets:  list[dict] | None = Field(default_factory=list)
+    card_images:  list[dict] | None = Field(default_factory=list)
+    card_prices:  list[dict] | None = Field(default_factory=list)
     quantity: int | None = 1
     set_code: str | None = None
     set_rarity_code: str | None = None
@@ -69,7 +70,7 @@ class Card(CardBase, table=True):
 
 
 class CardSet(SQLModel, table=True):
-    id: int = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     name: str
     cards: List[Card] = Relationship(
         back_populates="sets",
@@ -78,36 +79,36 @@ class CardSet(SQLModel, table=True):
     # __table_args__ = {"extend_existing": True}
 
 class CardFilter(BaseModel):
-    id: int | None = Field(default=None, primary_key=True)
-    name: str | None = Field(default=None, index=True)
-    type: str | None = Field(default=None, index=True) 
-    frameType: str | None = Field(default=None, index=True) 
-    desc: str | None = Field(default=None,  sa_column=Column(Text))
-    pend_desc: str | None = Field(default=None,  sa_column=Column(Text))
-    min_atk: int | None = Field(default=None, index=True, ge=0) 
-    max_atk: int | None = Field(default=None, index=True, ge=0)
-    atk: int | None = Field(default=None, index=True, ge=0)
-    min_defense: int | None = Field(default=None, index=True, ge=0)
-    max_defense: int | None = Field(default=None, index=True, ge=0)
-    defense: int | None = Field(default=None, index=True, ge=0)
-    min_level: int | None = Field(default=None, index=True, ge=0, le=12) 
-    max_level: int | None = Field(default=None, index=True, ge=0, le=12) 
-    level: int | None = Field(default=None, index=True, ge=0, le=12)
-    race: str | None = Field(default=None, index=True) 
-    attribute: str | None = Field(default=None, index=True)
-    scale: int | None = Field(default=None, index=True) 
-    archetype: str | None = Field(default=None, index=True)
-    link_rating: int | None = Field(default=None, index=True)
-    link_arrows: str | None = Field(default=None, index=True)
+    id: int | None = Query(default=None)
+    name: str | None = Query(default=None)
+    type: str | None = Query(default=None,) 
+    frameType: str | None = Query(default=None) 
+    desc: str | None = Query(default=None)
+    pend_desc: str | None = Query(default=None)
+    min_atk: int | None = Query(default=None, ge=0) 
+    max_atk: int | None = Query(default=None, ge=0)
+    atk: int | None = Query(default=None, ge=0)
+    min_defense: int | None = Query(default=None, ge=0)
+    max_defense: int | None = Query(default=None, ge=0)
+    defense: int | None = Query(default=None, ge=0)
+    min_level: int | None = Query(default=None, ge=0, le=12) 
+    max_level: int | None = Query(default=None, ge=0, le=12) 
+    level: int | None = Query(default=None,  ge=0, le=12)
+    race: str | None = Query(default=None) 
+    attribute: str | None = Query(default=None)
+    scale: int | None = Query(default=None) 
+    archetype: str | None = Query(default=None)
+    link_rating: int | None = Query(default=None)
+    link_arrows: str | None = Query(default=None)
 
 
 class User(SQLModel):
-    username: str = Field(index=True, unique=True)
-    email: str = Field(index=True, unique=True)
+    username: str = Field(default=None, index=True, unique=True)
+    email: str = Field(default=None, index=True, unique=True)
     is_active: bool = Field(default=True)
 
 class UserinDB(User, table=True):
-    id: int = Field(primary_key=True)
+    id: int = Field(default=None, primary_key=True)
     hashed_password: str
 
     __tablename__ = "userindb"
