@@ -20,19 +20,11 @@ app.include_router(users.router)
 app.include_router(auth.router)
 app.include_router(utilities.router)
 
-IMAGE_PATH = "images"
-
-if os.path.exists(IMAGE_PATH):
-    app.mount("/images", StaticFiles(directory=IMAGE_PATH), name="images")
-else:
-    print(f"Warning: {IMAGE_PATH} directory not found. Static files not mounted.")
-
 
 
 origins = [
-    "http://localhost:5173",
-    "http://127.0.0.1:3000"
-]
+    "*"
+    ]
 
 app.add_middleware(
     CORSMiddleware,
@@ -42,7 +34,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from fastapi.openapi.utils import get_openapi
 
 
 

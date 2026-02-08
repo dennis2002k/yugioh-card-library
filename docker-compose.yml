@@ -28,8 +28,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=mysql+pymysql://user:password@db:3306/ygo_db
-      - SECRET_KEY=3f0afcde0e5093d46868403ab5c4eeddf1dd481277cc547b517582972966c5f0
+      - DATABASE_URL=${DATABASE_URL}
+      - SECRET_KEY=${SECRET_KEY}
     depends_on:
       db:
         condition: service_healthy

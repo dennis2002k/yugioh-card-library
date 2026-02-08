@@ -12,6 +12,7 @@ venv/
 
 # Databases
 *.db
+.sql
 
 # IDE
 .vscode/
@@ -23,3 +24,5 @@ venv/
 # Images folder
 images/
 logfile.txt
+
+aws/

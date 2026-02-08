@@ -11,7 +11,7 @@ export default function GlobalCardSearch({refreshLibrary, addToLibrary}) {
     try {
       const token = localStorage.getItem("token");
       const params = new URLSearchParams(currentFilters).toString();
-      const response = await fetch(`http://127.0.0.1:8000/card/search?${params}`,
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/card/search?${params}`,
       {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -51,7 +51,7 @@ export default function GlobalCardSearch({refreshLibrary, addToLibrary}) {
             let images = [];
             const imageUrl = card.card_images[0].image_url?.replace("../","/");
             console.log(imageUrl)
-            const fullUrl = imageUrl ? "http://127.0.0.1:9000/ygo-card-images" + imageUrl : null;
+            const fullUrl = `${import.meta.env.VITE_S3_URL}cards/` + card.id + ".jpg";
 
             return (
               <div key={card.id} className="card"  style={{ display: "flex", alignItems: "center", gap: "10px", padding: "6px", borderBottom: "1px solid #eee" }}
