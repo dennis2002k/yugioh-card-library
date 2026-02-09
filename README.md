@@ -51,7 +51,7 @@ Backend API for managing user Yu-Gi-Oh card collections.
 
 
 ## Public Deployment
-Both Backend and Frontend are deployed on AWS Fargate amd are accessible via the puplic ips http://51.20.105.92 and http://16.170.202.2 accordingly.
+Both Backend and Frontend are deployed on AWS Fargate amd are accessible via the puplic ips http://51.20.105.92:8000/docs and http://16.170.202.2 accordingly.
 
 ### Note: The deployment currently uses HTTP (no domain / HTTPS yet).
 - Future improvement includes adding HTTPS and a custom domain.
@@ -62,10 +62,52 @@ source venv/bin/activate
 pip install -r requirements.txt
 ``` -->
 ## Run locally
-- Create .env file with DATABASE_URL and SECRET_KEY
-- RUN with Docker:
+
+### RUN with Docker:
+- Create .env file with DATABASE_URL(mysql+pymysql://user:password@db:3306/ygo_db to use the one created by the docker-compose), SEED_DATABASE_URL(mysql+pymysql://user:password@127.0.0.1:3306/ygo_db) to seed cards to database and SECRET_KEY(openssl rand -hex 32 to create a random one)
+- Create .env.production inside the /frontend folder with VITE_API_URL (http://localhost:8000) and VITE_S3_URL(https://ygo-cards-images-dennis2002k.s3.eu-north-1.amazonaws.com/) for the frontend to show images.  
+
+- RUN to get cards into database
+```bash
+python -m scripts.seed_cards
+```
+
 ```bash 
 docker compose up --build
+```
+
+### RUN without docker
+
+- Setup
+- 1. 
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+- 2. Inside /frontend
+```bash
+npm install
+```
+
+- 3. Create a database or use "sqlite:///:memory:" as DATABASE_URL for a in memory database.
+
+- 4.  Create .env file with DATABASE_URL, SEED_DATABASE_URL to seed cards to database and SECRET_KEY(openssl rand -hex 32 to create a random one)
+- Create .env.development inside the /frontend folder with VITE_API_URL (http://127.0.0.1:8000) and VITE_S3_URL(https://ygo-cards-images-dennis2002k.s3.eu-north-1.amazonaws.com/) for the frontend to show images.
+
+- 5. RUN to get cards into database
+```bash
+python -m scripts.seed_cards
+```
+
+- 6. RUN Backend
+```bash
+python -m fastapi dev app/app.py
+```
+- 7. RUN Frontend inside /frontend
+```bash
+npm run dev
 ```
 
 ## Running tests

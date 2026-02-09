@@ -36,7 +36,7 @@ os.makedirs(IMAGES_PATH, exist_ok=True)
 
 # load database url from env variable
 load_dotenv()
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("SEED_DATABASE_URL")
 
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL not set in .env")
