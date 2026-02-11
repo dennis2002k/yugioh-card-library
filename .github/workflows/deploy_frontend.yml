@@ -35,7 +35,7 @@ jobs:
       id: get-ip
       run: |
         # Get the Task ARN
-        TASK_ARN=$(aws ecs list-tasks --cluster ygo-cluster --service ygowebapp-service-4pntnyu7 --query "taskArns[0]" --output text)
+        TASK_ARN=arn:aws:ecs:eu-north-1:307907075855:service/ygo-cluster/ygowebapp-service-4pntnyu7
         
         # Get the Public IP from the Network Interface
         ENI_ID=$(aws ecs describe-tasks --cluster ygo-cluster --tasks $TASK_ARN --query "tasks[0].attachments[0].details[?name=='networkInterfaceId'].value" --output text)
