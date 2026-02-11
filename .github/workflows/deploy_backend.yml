@@ -48,3 +48,14 @@ jobs:
     - name: Deploy to ECS
       run: |
         aws ecs update-service --cluster ygo-cluster --service ygowebapp-service-4pntnyu7 --force-new-deployment
+    
+    - name: Get Backend Public IP
+      id: get-ip
+      run: |
+        # Get the Task ARN
+        TASK_ARN=$(aws ecs list-tasks --cluster ygo-cluster --service ygowebapp-service-4pntnyu7 --query "taskArns[0]" --output text)
+        
+        # Get the Public IP from the Network Interface
+        ENI_ID=$(aws ecs describe-tasks --cluster ygo-cluster --tasks $TASK_ARN --query "tasks[0].attachments[0].details[?name=='networkInterfaceId'].value" --output text)
+        PUBLIC_IP=$(aws ec2 describe-network-interfaces --network-interface-ids $ENI_ID --query "NetworkInterfaces[0].Association.PublicIp" --output text)
+        echo "ip=$PUBLIC_IP" >> $GITHUB_OUTPUT

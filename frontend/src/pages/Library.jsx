@@ -114,7 +114,7 @@ function Library() {
       console.log("Error:", err.message);
 
       if (err.message === "unauthorized") {
-        setError("Session expired. Please login again.");
+        setError("Session expired. Please login again!");
       } else {
         setError("Could not load library.");
       }
