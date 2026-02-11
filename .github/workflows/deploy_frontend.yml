@@ -41,6 +41,7 @@ jobs:
         ENI_ID=$(aws ecs describe-tasks --cluster ygo-cluster --tasks $TASK_ARN --query "tasks[0].attachments[0].details[?name=='networkInterfaceId'].value" --output text)
         PUBLIC_IP=$(aws ec2 describe-network-interfaces --network-interface-ids $ENI_ID --query "NetworkInterfaces[0].Association.PublicIp" --output text)
         echo "ip=$PUBLIC_IP" >> $GITHUB_OUTPUT
+        echo "DEBUG: Public ip is: $PUBLIC_IP"
 
     - name: Build, tag, and push Frontend
       env:
