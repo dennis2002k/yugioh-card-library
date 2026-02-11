@@ -36,7 +36,7 @@ jobs:
       run: |
         sleep 30
         # Get the Task ARN
-        TASK_ARN=$(aws ecs list-tasks --cluster ygo-cluster --service ygowebapp-service-4pntnyu7 --desired-status RUNNING --query "taskArns[1]" --output text )
+        TASK_ARN=$(aws ecs list-tasks --cluster ygo-cluster --service ygowebapp-service-4pntnyu7 --desired-status RUNNING --query "taskArns[0]" --output text )
         
         # Get the Public IP from the Network Interface
         ENI_ID=$(aws ecs describe-tasks --cluster ygo-cluster --tasks $TASK_ARN --query "tasks[0].attachments[0].details[?name=='networkInterfaceId'].value" --output text)
