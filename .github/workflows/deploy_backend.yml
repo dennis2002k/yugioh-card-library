@@ -31,6 +31,8 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ygo-backend
         IMAGE_TAG: ${{ github.sha }}
+        DATABASE_URL: mysql+pymysql://admin:Playstation2002@ygo-db-instance.c1s8k8cm6rjh.eu-north-1.rds.amazonaws.com/ygo_db
+        SECRET_KEY: 3f0afcde0e5093d46868403ab5c4eeddf1dd481277cc547b517582972966c5f0
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY --all-tags
