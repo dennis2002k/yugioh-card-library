@@ -1,9 +1,9 @@
 name: Push to AWS ECR
 
 on:
-  workflow_run: ["Python Tests"]
-  types:
-    - completed  
+  workflow_run:
+    workflows: ["Python Tests"]
+    types: [completed] 
 
 jobs:
   deploy:
