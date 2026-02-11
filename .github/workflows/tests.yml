@@ -28,3 +28,8 @@ jobs:
         run: |
           # Use -m pytest to ensure absolute imports work
           python -m pytest -v
+
+  call-deploy:
+    needs: test
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
