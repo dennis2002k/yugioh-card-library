@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import LibraryFilters from "../components/LibraryFilters";
 import GlobalCardSearch from "../components/GlobalCardSearch";
+import NavBar from "../components/NavBar"
 import "../index.css"
 
 function Library() {
@@ -9,6 +11,7 @@ function Library() {
   const [error, setError] = useState("");
   const [fetching, setFetching] = useState(false);
 
+  const navigate = useNavigate();
 
   async function addToLibrary(cardId) {
     try {
@@ -66,7 +69,12 @@ function Library() {
       console.error("Error removing card:", err);
     }
   }
- 
+  
+  const handleLogout = () =>  {
+    alert("Logged out!");
+    localStorage.removeItem("token");
+    navigate("/login", { replace: true });
+  };
 
   async function fetchLibrary(filters = {}) {
     try {
@@ -127,7 +135,9 @@ function Library() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
+<div><NavBar onLogout={handleLogout} /> 
+<div style={{ display: "flex", height: "100vh" , paddingTop: "60px"}}>
+  
   {/* LEFT SIDE */}
   <div style={{ width: "70%", display: "flex", flexDirection: "column" }}>
 
@@ -216,6 +226,7 @@ function Library() {
 
   {/* RIGHT SIDE */}
   <GlobalCardSearch refreshLibrary={fetchLibrary} addToLibrary={addToLibrary}/>
+</div>
 </div>
 
   );
