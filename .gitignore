@@ -9,8 +9,9 @@ venv/
 
 # Environment variables
 .env
-/frontend/.env.development
-/frontend/.env.production
+.env.development
+frontend/.env.development
+frontend/.env.production
 
 # Databases
 *.db
