@@ -34,6 +34,7 @@ jobs:
     - name: Get Backend Public IP
       id: get-ip
       run: |
+        sleep 30
         # Get the Task ARN
         TASK_ARN=$(aws ecs list-tasks --cluster ygo-cluster --service ygowebapp-service-4pntnyu7 --desired-status RUNNING --query "taskArns[0]" --output text )
         
