@@ -40,8 +40,9 @@ jobs:
         TASK_ARN=$(aws ecs describe-tasks \
           --cluster ygo-cluster \
           --tasks $(aws ecs list-tasks --cluster ygo-cluster --service ygowebapp-service-4pntnyu7 --desired-status RUNNING --query "taskArns" --output text) \
-          --query "tasks | sort_by(@, &startedAt) | [-1].taskArn" \
+          --query "tasks | sort_by(@, &taskDefinitionArn) | [-1].taskArn" \
           --output text)
+
         aws ecs wait tasks-running --cluster ygo-cluster --tasks $TASK_ARN
         # Get the Public IP from the Network Interface
         ENI_ID=$(aws ecs describe-tasks --cluster ygo-cluster --tasks $TASK_ARN --query "tasks[0].attachments[0].details[?name=='networkInterfaceId'].value" --output text)
