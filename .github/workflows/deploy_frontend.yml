@@ -49,7 +49,7 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: ygo-frontend
         IMAGE_TAG: ${{ github.sha }}
-        VITE_API_URL: http://${{ steps.get-ip.outputs.ip }}:8000  
+        VITE_API_URL: http://$PUBLIC_IP:8000  
         VITE_S3_URL: https://ygo-cards-images-dennis2002k.s3.eu-north-1.amazonaws.com/
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest ./frontend
