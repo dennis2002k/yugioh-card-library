@@ -47,6 +47,15 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY --all-tags
     - name: Deploy to ECS
       run: |
-        aws ecs update-service --cluster ygo-cluster --service ygowebapp-service-4pntnyu7 --force-new-deployment
+        # 1. Get the current task definition
+        TASK_DEF=$(aws ecs describe-task-definition --task-definition ygo-backend)
+        
+        # 2. Create a new revision with the NEW image tag
+        NEW_TASK_DEF=$(echo $TASK_DEF | jq --arg IMAGE "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" \
+          '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy)')
+        
+        # 3. Register the new revision
+        NEW_REVISION=$(aws ecs register-task-definition --cli-input-json "$NEW_TASK_DEF" --query "taskDefinition.taskDefinitionArn" --output text)
+        aws ecs update-service --cluster ygo-cluster --service ygowebapp-service-4pntnyu7 --task-definition $NEW_REVISION --force-new-deployment
     
     
