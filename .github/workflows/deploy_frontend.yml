@@ -53,7 +53,7 @@ jobs:
         # VITE_S3_URL: https://ygo-cards-images-dennis2002k.s3.eu-north-1.amazonaws.com/
       run: |
         docker build \
-        --build-arg VITE_API_URL=http://$PUBLIC_IP:8000 \
+        --build-arg VITE_API_URL=http://${{ steps.get-ip.outputs.ip }}:8000 \
           --build-arg VITE_S3_URL=https://ygo-cards-images-dennis2002k.s3.eu-north-1.amazonaws.com/ \
           -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest ./frontend
         docker push $ECR_REGISTRY/$ECR_REPOSITORY --all-tags
