@@ -100,13 +100,13 @@ jobs:
         # 2. Extract the new IP from your previous step (Backend IP)
         # Note: This assumes you are getting the Backend IP earlier in the job
         NEW_BACKEND_IP="${{ steps.get-ip.outputs.ip }}"
-        
         # 3. Use sed to replace the IPs in the README
         # Pattern 1: Finds the IP before :8000/docs
         sed -i "s/http:\/\/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}:8000/http:\/\/$NEW_BACKEND_IP:8000/g" README.md
         
         # Pattern 2: Finds the IP at the end of the sentence (Frontend IP)
-        NEW_FRONTEND_IP="${{ steps.get-ip.outputs.frontendIp }}"
+        NEW_FRONTEND_IP="${{ steps.get-frontend-ip.outputs.frontendIp }}"
+        echo "${{ steps.get-ip.outputs.frontendIp }}"
         # This matches 'and http://' followed by anything that isn't a space, ending in ' accordingly'
         sed -i "s|and http://[^ ]* accordingly|and http://$NEW_FRONTEND_IP accordingly|g" README.md
 
