@@ -90,26 +90,26 @@ jobs:
         echo "DEBUG: Frontend Public ip is: $PUBLIC_IP and ARN: $TASK_ARN"
 
     - name: Update README IPs
-    run: |
-      # 1. Setup Git identity
-      git config --global user.name "github-actions[bot]"
-      git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      run: |
+        # 1. Setup Git identity
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      # 2. Extract the new IP from your previous step (Backend IP)
-      # Note: This assumes you are getting the Backend IP earlier in the job
-      NEW_BACKEND_IP="${{ steps.get-ip.outputs.ip }}"
-      
-      # 3. Use sed to replace the IPs in the README
-      # Pattern 1: Finds the IP before :8000/docs
-      sed -i "s/http:\/\/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}:8000/http:\/\/$NEW_BACKEND_IP:8000/g" README.md
-      
-      # Pattern 2: Finds the IP at the end of the sentence (Frontend IP)
-      # Since Frontend usually has its own IP, replace it here if needed. 
-      # If the Frontend IP is the same as Backend, use $NEW_BACKEND_IP.
-      NEW_FRONTEND_IP="${{ steps.get-ip.outputs.frontendIp }}"
-      sed -i "s/and http:\/\/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\} accordingly/and http:\/\/YOUR_FRONTEND_IP accordingly/g" README.md
+        # 2. Extract the new IP from your previous step (Backend IP)
+        # Note: This assumes you are getting the Backend IP earlier in the job
+        NEW_BACKEND_IP="${{ steps.get-ip.outputs.ip }}"
+        
+        # 3. Use sed to replace the IPs in the README
+        # Pattern 1: Finds the IP before :8000/docs
+        sed -i "s/http:\/\/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}:8000/http:\/\/$NEW_BACKEND_IP:8000/g" README.md
+        
+        # Pattern 2: Finds the IP at the end of the sentence (Frontend IP)
+        # Since Frontend usually has its own IP, replace it here if needed. 
+        # If the Frontend IP is the same as Backend, use $NEW_BACKEND_IP.
+        NEW_FRONTEND_IP="${{ steps.get-ip.outputs.frontendIp }}"
+        sed -i "s/and http:\/\/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\} accordingly/and http:\/\/YOUR_FRONTEND_IP accordingly/g" README.md
 
-      # 4. Commit and Push
-      git add README.md
-      git commit -m "docs: update deployment IPs [skip ci]"
-      git push
+        # 4. Commit and Push
+        git add README.md
+        git commit -m "docs: update deployment IPs [skip ci]"
+        git push
