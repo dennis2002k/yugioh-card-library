@@ -42,7 +42,7 @@ jobs:
         ENI_ID=$(aws ecs describe-tasks --cluster ygo-cluster --tasks $TASK_ARN --query "tasks[0].attachments[0].details[?name=='networkInterfaceId'].value" --output text)
         PUBLIC_IP=$(aws ec2 describe-network-interfaces --network-interface-ids $ENI_ID --query "NetworkInterfaces[0].Association.PublicIp" --output text)
         echo "ip=$PUBLIC_IP" >> $GITHUB_OUTPUT
-        echo "DEBUG: Public ip is: $PUBLIC_IP and ARN: $TASK_ARN"
+        echo "DEBUG: Backend Public ip is: $PUBLIC_IP and ARN: $TASK_ARN"
 
     - name: Build, tag, and push Frontend
       env:
@@ -74,3 +74,42 @@ jobs:
         # 3. Register the new revision
         NEW_REVISION=$(aws ecs register-task-definition --cli-input-json "$NEW_TASK_DEF" --query "taskDefinition.taskDefinitionArn" --output text)
         aws ecs update-service --cluster ygo-cluster --service ygo-frontend-task-service-9vcaad0m --task-definition $NEW_REVISION --force-new-deployment
+
+
+    - name: Get Frontend Public IP
+      id: get-frontend-ip
+      run: |
+        sleep 90
+        # Get the Task ARN
+        TASK_ARN=$(aws ecs list-tasks --cluster ygo-cluster --service ygo-frontend-task-service-9vcaad0m --desired-status RUNNING --query "taskArns[0]" --output text )
+        
+        # Get the Public IP from the Network Interface
+        ENI_ID=$(aws ecs describe-tasks --cluster ygo-cluster --tasks $TASK_ARN --query "tasks[0].attachments[0].details[?name=='networkInterfaceId'].value" --output text)
+        PUBLIC_IP=$(aws ec2 describe-network-interfaces --network-interface-ids $ENI_ID --query "NetworkInterfaces[0].Association.PublicIp" --output text)
+        echo "frontendIp=$PUBLIC_IP" >> $GITHUB_OUTPUT
+        echo "DEBUG: Frontend Public ip is: $PUBLIC_IP and ARN: $TASK_ARN"
+
+    - name: Update README IPs
+    run: |
+      # 1. Setup Git identity
+      git config --global user.name "github-actions[bot]"
+      git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      # 2. Extract the new IP from your previous step (Backend IP)
+      # Note: This assumes you are getting the Backend IP earlier in the job
+      NEW_BACKEND_IP="${{ steps.get-ip.outputs.ip }}"
+      
+      # 3. Use sed to replace the IPs in the README
+      # Pattern 1: Finds the IP before :8000/docs
+      sed -i "s/http:\/\/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}:8000/http:\/\/$NEW_BACKEND_IP:8000/g" README.md
+      
+      # Pattern 2: Finds the IP at the end of the sentence (Frontend IP)
+      # Since Frontend usually has its own IP, replace it here if needed. 
+      # If the Frontend IP is the same as Backend, use $NEW_BACKEND_IP.
+      NEW_FRONTEND_IP="${{ steps.get-ip.outputs.frontendIp }}"
+      sed -i "s/and http:\/\/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\} accordingly/and http:\/\/YOUR_FRONTEND_IP accordingly/g" README.md
+
+      # 4. Commit and Push
+      git add README.md
+      git commit -m "docs: update deployment IPs [skip ci]"
+      git push
