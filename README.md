@@ -2,6 +2,10 @@
 
 Backend API for managing user Yu-Gi-Oh card collections.
 
+[![Push Backend to AWS ECR/ECS](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/deploy_backend.yml/badge.svg)](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/deploy_backend.yml)
+[![Push Frontend to AWS ECR/ECS](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/deploy_frontend.yml/badge.svg)](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/deploy_frontend.yml)
+[![Python Tests](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/tests.yml/badge.svg)](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/tests.yml)
+
 ## Overview
 - Register and authenticate securely using JWT
 - Search and filter cards with advanced criteria
@@ -40,6 +44,7 @@ Backend API for managing user Yu-Gi-Oh card collections.
 - AWS ECR (Container Registry)
 - AWS ECS (Fargate)
 - AWS Storage (RDS, S3)
+- DevOps: GitHub Actions (Automated CI/CD Pipeline)
 
 ## Testing Backend
 - Pytest
@@ -79,33 +84,33 @@ docker compose up --build
 ### RUN without docker
 
 - Setup
-- 1. 
+1. 
 ```bash
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-- 2. Inside /frontend
+2. Inside /frontend
 ```bash
 npm install
 ```
 
-- 3. Create a database or use "sqlite:///:memory:" as DATABASE_URL for a in memory database.
+3. Create a database or use "sqlite:///:memory:" as DATABASE_URL for a in memory database.
 
-- 4.  Create .env file with DATABASE_URL, SEED_DATABASE_URL to seed cards to database and SECRET_KEY(openssl rand -hex 32 to create a random one)
-- Create .env.development inside the /frontend folder with VITE_API_URL (http://16.171.57.241:8000) and VITE_S3_URL(https://ygo-cards-images-dennis2002k.s3.eu-north-1.amazonaws.com/) for the frontend to show images.
+4.  Create .env file with DATABASE_URL, SEED_DATABASE_URL to seed cards to database and SECRET_KEY(openssl rand -hex 32 to create a random one)
+- Create .env.development inside the /frontend folder with VITE_API_URL (http://13.53.68.235:8000) and VITE_S3_URL(https://ygo-cards-images-dennis2002k.s3.eu-north-1.amazonaws.com/) for the frontend to show images.
 
-- 5. RUN to get cards into database
+5. RUN to get cards into database
 ```bash
 python -m scripts.seed_cards
 ```
 
-- 6. RUN Backend
+6. RUN Backend
 ```bash
 python -m fastapi dev app/app.py
 ```
-- 7. RUN Frontend inside /frontend
+7. RUN Frontend inside /frontend
 ```bash
 npm run dev
 ```

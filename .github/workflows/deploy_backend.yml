@@ -1,4 +1,4 @@
-name: Push Backend to AWS ECR
+name: Push Backend to AWS ECR/ECS
 
 on:
   workflow_run:
