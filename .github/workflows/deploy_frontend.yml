@@ -7,7 +7,7 @@ concurrency:
 on:
 
   workflow_run:
-    workflows: ["Python Tests", "Push Backend to AWS ECR"]
+    workflows: ["Push Backend to AWS ECR"]
     types: [completed] 
     paths:
       - 'frontend/**'
