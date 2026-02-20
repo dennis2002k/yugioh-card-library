@@ -9,8 +9,6 @@ on:
   workflow_run:
     workflows: ["Push Backend to AWS ECR/ECS"]
     types: [completed] 
-    paths:
-      - 'frontend/**'
 
 jobs:
   deploy:

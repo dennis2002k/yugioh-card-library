@@ -4,9 +4,6 @@ on:
   workflow_run:
     workflows: ["Python Tests"]
     types: [completed] 
-    paths:
-      - 'app/**'
-
 jobs:
   deploy:
     runs-on: ubuntu-latest

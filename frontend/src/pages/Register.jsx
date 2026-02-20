@@ -18,7 +18,7 @@ function Register() {
     formData.append("username", username);
     formData.append("email", email);
     formData.append("password", password);
-
+    console.log(`${import.meta.env.VITE_API_URL}`)
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/register`, {
         method: "POST",
@@ -26,14 +26,17 @@ function Register() {
         body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error("Register failed");
-      }
 
-      // After successful register → login
-      navigate("/login");
+      if (response.ok) {
+        navigate("/login");
+      } else if (response.status === 409) {
+        setError("That username is already taken."); // Use the same state setter!
+      } else {
+        setError("Something went wrong.");
+      }
     } catch (err) {
-      setError("Could not register user");
+      // This only runs if the API is offline/unreachable
+      setError("Could not register user due to a network error.");
     }
   }
 
@@ -88,6 +91,7 @@ function Register() {
             <button type="submit" style={buttonStyle}>
                 Register
             </button>
+            {error && <p style={styles.error}>{error}</p>}
             </form>
           </div>
         </div>
@@ -120,4 +124,36 @@ const inputStyle = {
     fontSize: "16px",        // makes it more prominent
     marginTop: "10px",       // spacing from last input
   };
+
+const styles = {
+  title: {
+    marginBottom: "20px",
+    textAlign: "center",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+  },
+  input: {
+    padding: "10px",
+    borderRadius: "6px",
+    border: "1px solid #ccc",
+    fontSize: "14px",
+  },
+  button: {
+    padding: "10px",
+    borderRadius: "6px",
+    border: "none",
+    background: "#4f46e5",
+    color: "white",
+    fontWeight: "bold",
+    cursor: "pointer",
+  },
+  error: {
+    marginTop: "10px",
+    color: "red",
+    textAlign: "center",
+  },
+};
 export default Register;

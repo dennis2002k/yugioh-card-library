@@ -82,8 +82,19 @@ async def login_for_access_token(session: SessionDep, form_data: Annotated[OAuth
 
 @router.post("/register")
 async def register_user(session: SessionDep, username: Annotated[str, Form()], password: Annotated[str, Form()], email: Annotated[str, Form()]):
+
+    user_exists = session.exec(select(UserinDB.username).where(UserinDB.username == username)).one_or_none()
+
+    if user_exists:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Username already registered"
+        )
+    
     hashed_password = get_password_hash(password)
     new_user = UserinDB(username=username, hashed_password=hashed_password, email=email)
+
+    
     session.add(new_user)
     session.commit()
     session.refresh(new_user)

@@ -2,9 +2,11 @@
 
 Backend API for managing user Yu-Gi-Oh card collections.
 
+
+[![Python Tests](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/tests.yml/badge.svg)](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/tests.yml)
 [![Push Backend to AWS ECR/ECS](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/deploy_backend.yml/badge.svg)](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/deploy_backend.yml)
 [![Push Frontend to AWS ECR/ECS](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/deploy_frontend.yml/badge.svg)](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/deploy_frontend.yml)
-[![Python Tests](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/tests.yml/badge.svg)](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/tests.yml)
+
 
 ## Overview
 - Register and authenticate securely using JWT

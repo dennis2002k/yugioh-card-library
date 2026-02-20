@@ -27,6 +27,7 @@ services:
     build: .
     ports:
       - "8000:8000"
+    env_file: .env
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - SECRET_KEY=${SECRET_KEY}
@@ -35,7 +36,16 @@ services:
         condition: service_healthy
 
   frontend:
-    build: ./frontend  # Path to your frontend folder
+    build:   # Path to your frontend folder
+      context: ./frontend
+      args:
+        # This tells Compose: "Take VITE_API_URL from my local .env 
+        # and pass it to the Dockerfile ARG"
+        - VITE_API_URL=http://127.0.0.1:8000
+        - VITE_S3_URL=https://ygo-cards-images-dennis2002k.s3.eu-north-1.amazonaws.com/
+    env_file: 
+      - ./frontend/.env.production
+      # env_file: .env.development
     ports:
       - "3000:80"      # You'll visit http://localhost:3000 to see your site
     depends_on:
