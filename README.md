@@ -58,7 +58,7 @@ Backend API for managing user Yu-Gi-Oh card collections.
 
 
 ## Public Deployment
-Both Backend and Frontend are deployed on AWS Fargate amd are accessible via the puplic ips http://16.171.137.34:8000/docs and http://13.60.85.174 accordingly.
+Both Backend and Frontend are deployed on AWS Fargate amd are accessible via the puplic ips http://16.170.157.198:8000/docs and http://13.53.201.5 accordingly.
 
 ### Note: The deployment currently uses HTTP (no domain / HTTPS yet).
 - Future improvement includes adding HTTPS and a custom domain.
@@ -101,7 +101,7 @@ npm install
 3. Create a database or use "sqlite:///:memory:" as DATABASE_URL for a in memory database.
 
 4.  Create .env file with DATABASE_URL, SEED_DATABASE_URL to seed cards to database and SECRET_KEY(openssl rand -hex 32 to create a random one)
-- Create .env.development inside the /frontend folder with VITE_API_URL (http://16.171.137.34:8000) and VITE_S3_URL(https://ygo-cards-images-dennis2002k.s3.eu-north-1.amazonaws.com/) for the frontend to show images.
+- Create .env.development inside the /frontend folder with VITE_API_URL (http://16.170.157.198:8000) and VITE_S3_URL(https://ygo-cards-images-dennis2002k.s3.eu-north-1.amazonaws.com/) for the frontend to show images.
 
 5. RUN to get cards into database
 ```bash
