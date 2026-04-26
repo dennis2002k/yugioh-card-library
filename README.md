@@ -66,8 +66,8 @@ Backend API for managing user Yu-Gi-Oh card collections.
 <!-- Both Backend and Frontend are deployed on AWS Fargate amd are accessible via the puplic ips http://13.63.62.177:8000/docs and http://13.60.91.64 accordingly. -->
 Previously deployed on AWS Fargate with a CI/CD pipeline.
 
-### Note: The deployment currently uses HTTP (no domain / HTTPS yet).
-- Future improvement includes adding HTTPS and a custom domain.
+<!-- ### Note: The deployment currently uses HTTP (no domain / HTTPS yet).
+- Future improvement includes adding HTTPS and a custom domain. -->
 <!-- ## Setup Locally -->
 <!-- ```bash
 python -m venv venv
