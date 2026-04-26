@@ -4,8 +4,8 @@ Backend API for managing user Yu-Gi-Oh card collections.
 
 
 [![Python Tests](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/tests.yml/badge.svg)](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/tests.yml)
-[![Push Backend to AWS ECR/ECS](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/deploy_backend.yml/badge.svg)](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/deploy_backend.yml)
-[![Push Frontend to AWS ECR/ECS](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/deploy_frontend.yml/badge.svg)](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/deploy_frontend.yml)
+<!-- [![Push Backend to AWS ECR/ECS](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/deploy_backend.yml/badge.svg)](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/deploy_backend.yml)
+[![Push Frontend to AWS ECR/ECS](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/deploy_frontend.yml/badge.svg)](https://github.com/dennis2002k/yugioh-card-library/actions/workflows/deploy_frontend.yml) -->
 
 
 ## Overview
@@ -63,7 +63,8 @@ Backend API for managing user Yu-Gi-Oh card collections.
 > You can also download and play it locally from the [`preview/`](./preview/) folder.
 
 ## Public Deployment
-Both Backend and Frontend are deployed on AWS Fargate amd are accessible via the puplic ips http://13.63.62.177:8000/docs and http://13.60.91.64 accordingly.
+<!-- Both Backend and Frontend are deployed on AWS Fargate amd are accessible via the puplic ips http://13.63.62.177:8000/docs and http://13.60.91.64 accordingly. -->
+Previously deployed on AWS Fargate with a CI/CD pipeline.
 
 ### Note: The deployment currently uses HTTP (no domain / HTTPS yet).
 - Future improvement includes adding HTTPS and a custom domain.
