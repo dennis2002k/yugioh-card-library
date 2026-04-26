@@ -58,7 +58,7 @@ Backend API for managing user Yu-Gi-Oh card collections.
 
 ## Demo
 
-▶️ [Watch the demo](./preview/demo.mp4)
+▶️ [Watch the demo](./preview/demo.gif)
 
 > You can also download and play it locally from the [`preview/`](./preview/) folder.
 
