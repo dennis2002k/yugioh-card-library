@@ -18,6 +18,12 @@ Backend API for managing user Yu-Gi-Oh card collections.
 - Deploy the backend to the cloud using AWS
 - Basic frontend for easy interaction and demonstration
 
+## Demo
+
+▶️ ![Watch the demo](./preview/demo.gif)
+
+> You can also download and play it locally from the [`preview/`](./preview/) folder.
+
 ## Features
 - JWT Authentication (login / protected routes)
 - Card search with multiple filters (attack, defense, level, attribute, etc.)
@@ -56,11 +62,6 @@ Backend API for managing user Yu-Gi-Oh card collections.
 - Client -> FastAPI API -> Database
 - Docker -> AWS ECR -> AWS Fargate deployment
 
-## Demo
-
-▶️ [Watch the demo](./preview/demo.gif)
-
-> You can also download and play it locally from the [`preview/`](./preview/) folder.
 
 ## Public Deployment
 <!-- Both Backend and Frontend are deployed on AWS Fargate amd are accessible via the puplic ips http://13.63.62.177:8000/docs and http://13.60.91.64 accordingly. -->
